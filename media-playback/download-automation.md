@@ -1,6 +1,6 @@
 # Download Automation Stack
 
-> **Type**: Docker stack (LXC 109 `download`)
+> **Type**: Docker stack (VM 102 )
 > **Category**: Media – Downloaders & Indexers
 > **Role**: Full automated pipeline for downloading, organizing, and enriching media content
 
