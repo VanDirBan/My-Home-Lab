@@ -63,12 +63,6 @@ services:
 ```
 
 
-## 🔑 Access
-Admin UI: http://<LXC-IP>:81
-Default creds: admin@example.com / changeme
-
-Let’s Encrypt: HTTP-01 challenge on port 80, certificates stored in ./npm/letsencrypt.
-
 ## 📝 Notes
 Use one proxy host per sub-domain (e.g., jellyfin.domain.tld).
 
