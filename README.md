@@ -81,7 +81,7 @@ flowchart TD
   end
 
   %% Proxmox Services
-  subgraph Proxmox [Proxmox Node (ThinkCentre M70Q)]
+  subgraph ProxmoxNode [Proxmox Node (ThinkCentre M70Q)]
     direction TB
     glance[🗂️ Glance Dashboard]
     disk[(💾 Disk – SMB Share)]
@@ -96,10 +96,10 @@ flowchart TD
   proxy -- HTTPS --> media
   proxy -- HTTPS --> observ
   proxy -- HTTPS --> disk
+  proxy -- HTTPS --> dl
 
   %% Proxmox hosting k3s
   proxmox --> k3s
-
 ````
 
 ---
