@@ -65,34 +65,41 @@ my-homelab-docs/
 ## 🗺️ High-Level Topology
 
 ```mermaid
-flowchart LR
-  subgraph LAN 192.168.8.0/24
-    PfSense[pfSense<br/>192.168.8.1]
-    proxy[Nginx<br/>Proxy Mgr]
-    adg[AdGuard Home]
-    proxmox[Proxmox VE<br/>192.168.8.64]
-    dns((  ))
-    PfSense --> proxy
-    PfSense --> proxmox
-    PfSense --> adg
-    adg --> dns
+flowchart TD
+  %% LAN
+  subgraph LAN [LAN 192.168.8.0/24]
+    direction TB
+    pfSense[🛡️ pfSense<br>192.168.8.1]
+    adg[🧠 AdGuard Home]
+    dns[(🌐 DNS)]
+    proxy[Nginx Proxy Manager<br>🌍 proxy.vanhome.online]
+    proxmox[🖥️ Proxmox VE<br>192.168.8.64]
+
+    pfSense --> adg --> dns
+    pfSense --> proxy
+    pfSense --> proxmox
   end
 
-  subgraph Proxmox Node
-    vm_disk[(Disk – SMB)]
-    vm_glance[Glance Startpage]
-    lxc_media[Jellyfin Stack]
-    lxc_download[Download Automation]
-    lxc_monitor[Prometheus & Grafana]
-    k3s[(k3s<br/>Server + 2 Workers)]
+  %% Proxmox Services
+  subgraph Proxmox [Proxmox Node (ThinkCentre M70Q)]
+    direction TB
+    glance[🗂️ Glance Dashboard]
+    disk[(💾 Disk – SMB Share)]
+    media[Jellyfin + Jellyseerr<br>🎬 Media Stack]
+    dl[⬇️ Downloaders<br>qBittorrent + NZBGet]
+    observ[📊 Monitoring<br>Grafana + Prometheus]
+    k3s[(☸️ k3s<br>1 Master + 2 Workers)]
   end
 
-  proxy <-- HTTPS --> lxc_media
-  proxy <-- HTTPS --> lxc_monitor
-  proxy <-- HTTPS --> vm_glance
-  proxy <-- HTTPS --> vm_disk
+  %% Connections from proxy to services
+  proxy -- HTTPS --> glance
+  proxy -- HTTPS --> media
+  proxy -- HTTPS --> observ
+  proxy -- HTTPS --> disk
 
+  %% Proxmox hosting k3s
   proxmox --> k3s
+
 ````
 
 ---
