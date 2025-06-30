@@ -65,7 +65,7 @@ my-homelab-docs/
 ## 🗺️ High-Level Topology
 
 ```mermaid
-flowchart TD
+flowchart TВ
   %% LAN
   subgraph LAN ["LAN: 192.168.8.0/24"]
     direction TB
