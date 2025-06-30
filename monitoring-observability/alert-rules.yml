@@ -1,0 +1,58 @@
+groups:
+- name: proxmox_node_alerts
+  rules:
+
+  - alert: HighCPUUsage
+    expr: avg by (instance) (100 - rate(node_cpu_seconds_total{mode="idle"}[2m]) * 100) > 85
+    for: 2m
+    labels:
+      severity: warning
+      alertname: HighCPUUsage
+      instance: "{{ $labels.instance }}"
+    annotations:
+      summary: "High CPU usage on {{ $labels.instance }}"
+      description: "CPU usage has been above 85% for the last 2 minutes."
+
+  - alert: HighMemoryUsage
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.9
+    for: 2m
+    labels:
+      severity: warning
+      alertname: HighMemoryUsage
+      instance: "{{ $labels.instance }}"
+    annotations:
+      summary: "High memory usage on {{ $labels.instance }}"
+      description: "Memory usage is above 90% for the last 2 minutes."
+
+  - alert: HighLoadAverage
+    expr: node_load1 > count without (cpu, mode) (node_cpu_seconds_total) * 1.5
+    for: 2m
+    labels:
+      severity: warning
+      alertname: HighLoadAverage
+      instance: "{{ $labels.instance }}"
+    annotations:
+      summary: "High system load on {{ $labels.instance }}"
+      description: "1-minute load average is more than 1.5x CPU core count for the last 2 minutes."
+
+  - alert: RootDiskAlmostFull
+    expr: (node_filesystem_size_bytes{mountpoint="/"} - node_filesystem_free_bytes{mountpoint="/"}) / node_filesystem_size_bytes{mountpoint="/"} > 0.85
+    for: 3m
+    labels:
+      severity: warning
+      alertname: RootDiskAlmostFull
+      instance: "{{ $labels.instance }}"
+    annotations:
+      summary: "Root filesystem almost full on {{ $labels.instance }}"
+      description: "Disk usage on / is over 85% for the last 3 minutes."
+
+  - alert: NodeExporterDown
+    expr: up{job="proxmox-node"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      alertname: NodeExporterDown
+      instance: "{{ $labels.instance }}"
+    annotations:
+      summary: "Node Exporter is down: {{ $labels.instance }}"
+      description: "Prometheus is not receiving metrics from this node for more than 1 minute."
