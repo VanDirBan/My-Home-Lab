@@ -1,0 +1,88 @@
+- name: Startpage
+  width: slim
+  hide-desktop-navigation: true
+  center-vertically: true
+
+  columns:
+    - size: full
+      widgets:
+        - type: search
+          autofocus: true
+
+        - type: monitor
+          cache: 1m
+          title: Network & Infrastructure
+          sites:
+            - { title: AdGuard Home,         url: https://adg.vanhome.online,        icon: si:adguard }
+            - { title: pfSense,              url: http://192.168.8.1,               icon: si:pfsense }
+            - { title: Xiaomi Router,        url: http://192.168.8.2,                icon: si:xiaomi }
+            - { title: Proxmox,              url: http://192.168.8.64:8006,         icon: si:proxmox }
+            - { title: Nginx Proxy Manager,  url: https://proxy.vanhome.online,     icon: si:nginx }
+
+        - type: monitor
+          cache: 1m
+          title: Media – Playback
+          sites:
+            - { title: Jellyfin,    url: https://jellyfin.vanhome.online, icon: si:jellyfin }
+            - { title: Jellyseerr,  url: https://jellyser.vanhome.online,  icon: mdi:movie-check }
+            - { title: Audiobookshelf,  url: https://book.vanhome.online,  icon: mdi:book }
+
+        - type: monitor
+          cache: 1m
+          title: Monitoring & Observability
+          sites:
+            - { title: Grafana,      url: https://graf.vanhome.online, icon: si:grafana }
+            - { title: Prometheus,   url: https://prom.vanhome.online, icon: si:prometheus }
+            - { title: Uptime Kuma,  url: https://up.vanhome.online,   icon: si:uptimekuma }
+
+        - type: monitor
+          cache: 1m
+          title: Storage & Files
+          sites:
+            - { title: FileBrowser, url: https://filebrowser.vanhome.online, icon: mdi:folder }
+            - { title: Immich,      url: https://immich.vanhome.online,     icon: si:immich }
+
+        - type: monitor
+          cache: 1m
+          title: Security & Secrets
+          sites:
+            - { title: Vaultwarden, url: https://vm.vanhome.online, icon: si:vaultwarden }
+
+        - type: monitor
+          cache: 1m
+          title: Media – Downloaders
+          sites:
+            - { title: qBittorrent, url: http://192.168.8.102:8080,                 icon: si:qbittorrent }
+            - { title: NZBGet,      url: http://van:12341324@192.168.8.102:6789,    icon: mdi:cloud-download }
+
+        - type: monitor
+          cache: 1m
+          title: Media – Indexers & Managers
+          sites:
+            - { title: Prowlarr, url: https://prowlarr.vanhome.online,        icon: mdi:rss }
+            - { title: Sonarr,   url: https://sonar.vanhome.online,    icon: si:sonarr }
+            - { title: Radarr,   url: https://radar.vanhome.online,    icon: si:radarr }
+            - { title: Lidarr,   url: https://lidarr.vanhome.online,        icon: mdi:music-circle }
+            - { title: Readarr,   url: https://readarr.vanhome.online/,        icon: mdi:book }
+            - { title: Bazarr,   url: https://bazarr.vanhome.online/,        icon: mdi:subtitles }
+
+    - size: small
+      widgets:
+        - type: calendar
+          first-day-of-week: monday
+
+        - type: server-stats
+          servers:
+            - type: local
+              name: Services
+              hide-mountpoints-by-default: true
+              mountpoints:
+                "/":
+                  name: Root
+                  hide: false
+                "/mnt/data":
+                  name: Data
+                  hide: false
+            - type: remote
+              name: proxmox
+              url: https://192.168.8.64:8006
