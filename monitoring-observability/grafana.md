@@ -30,9 +30,9 @@ Version **11.6.0** is used, running on port **3000** inside the same container a
 
 | Name        | Type       | URL                      | Details                  |
 |-------------|------------|--------------------------|--------------------------|
-| Prometheus  | Prometheus | `http://localhost:9090`  | Default scrape interval 15 s |
+| Prometheus  | Prometheus | `http://192.168.8.149:9090`  | Default scrape interval 15 s |
 | (planned) Loki | Loki | — | To be added for log aggregation |
-| (planned) Alertmanager | Alertmanager | `http://localhost:9093` | For silences & alert list |
+| Alertmanager | Alertmanager | `http://192.168.8.149:9093` | For silences & alert list |
 
 ---
 
