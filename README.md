@@ -91,6 +91,7 @@ flowchart LR
   proxy <-- HTTPS --> lxc_monitor
   proxy <-- HTTPS --> vm_glance
   proxy <-- HTTPS --> vm_disk
+
   proxmox --> k3s
 ````
 
