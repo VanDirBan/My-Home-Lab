@@ -24,8 +24,6 @@ The dashboard is defined by a single YAML file (`startpage.yml`), so new service
 | Auth            | None (read-only dashboard)             |
 | Restart policy  | `unless-stopped`                       |
 
-> *¹ If you use a different image/tag, edit this line accordingly.*
-
 ---
 
 ## 🗂️ Widget Layout (excerpt)
