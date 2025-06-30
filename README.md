@@ -58,46 +58,64 @@ my-homelab-docs/
 
 ````
 
-*Open the site locally with **`mkdocs serve`** or visit the GitHub Pages link if published.*
-
 ---
 
 ## 🗺️ High-Level Topology
 
 ```mermaid
-flowchart TВ
-  %% LAN
-  subgraph LAN ["LAN: 192.168.8.0/24"]
+flowchart LR
+  %% ───────────────────────────────────────────────
+  %% ЛЕВАЯ ЧАСТЬ – k3s-кластер
+  %% ───────────────────────────────────────────────
+  subgraph k3s_cluster [k3s Cluster]
     direction TB
-    pfSense[pfSense<br>192.168.8.1]
-    adg[AdGuard Home]
-    dns[(DNS)]
-    proxy[Nginx Proxy Manager<br>proxy.vanhome.online]
-    proxmox[Proxmox VE<br>192.168.8.64]
-
-    pfSense --> adg --> dns
-    pfSense --> proxy
-    pfSense --> proxmox
+    k3s-master[Master Node<br/>192.168.50.131]
+    k3s-worker1[Worker 1]
+    k3s-worker2[Worker 2]
+    k3s-master --> k3s-worker1
+    k3s-master --> k3s-worker2
   end
 
-  %% Proxmox services
-  subgraph ProxmoxNode ["Proxmox Node (M70Q)"]
+  %% ───────────────────────────────────────────────
+  %% ЦЕНТР – сервисы Proxmox-ноды
+  %% ───────────────────────────────────────────────
+  subgraph Proxmox_Node [Proxmox Node Services]
     direction TB
-    glance[Glance Dashboard]
-    disk[(Disk - SMB Share)]
-    media[Jellyfin + Jellyseerr<br>Media Stack]
-    dl[qBittorrent + NZBGet<br>Downloaders]
-    observ[Grafana + Prometheus<br>Monitoring]
-    k3s[(k3s Cluster<br>1 Master + 2 Workers)]
+    glance[Glance Startpage]
+    media[Jellyfin + Jellyseerr]
+    monitor[Grafana + Prometheus]
+    files[FileBrowser + Immich]
+    secrets[Vaultwarden]
+    download[qBittorrent + NZBGet + Indexers]
   end
 
-  %% Connections
-  proxy -->|HTTPS| glance
-  proxy -->|HTTPS| media
-  proxy -->|HTTPS| observ
-  proxy -->|HTTPS| disk
-  proxy -->|HTTPS| dl
-  proxmox --> k3s
+  %% ───────────────────────────────────────────────
+  %% ПРАВАЯ ЧАСТЬ – LAN 192.168.8.0/24
+  %% ───────────────────────────────────────────────
+  subgraph LAN [LAN 192.168.8.0/24]
+    direction TB
+    PfSense[pfSense<br/>192.168.8.1]
+    proxmox[Proxmox VE<br/>192.168.8.64]
+    proxy[Nginx Proxy Mgr<br/>proxy.vanhome.online]
+    adg[AdGuard Home<br/>adg.vanhome.online]
+    dns((DNS))
+    PfSense --> proxmox
+    PfSense --> proxy
+    PfSense --> adg
+    adg --> dns
+  end
+
+  %% ───────────────────────────────────────────────
+  %% СВЯЗИ МЕЖДУ БЛОКАМИ
+  %% ───────────────────────────────────────────────
+  proxmox --> k3s-master            
+  proxy -- HTTPS --> glance
+  proxy -- HTTPS --> media
+  proxy -- HTTPS --> monitor
+  proxy -- HTTPS --> files
+  proxy -- HTTPS --> secrets
+  proxy -- HTTPS --> download
+
 
 ````
 
@@ -113,7 +131,7 @@ flowchart TВ
 | **media-playback**           | Jellyfin, Jellyseerr, Audiobookshelf                                |
 | **media-downloaders**        | qBittorrent, NZBGet, Prowlarr, Sonarr/Radarr/Lidarr/Readarr, Bazarr |
 | **helpful-tools**            | Glance dashboard, ConvertX converter, k3s cluster description       |
-| **kubernetes**               | Cluster overview + future Helm addons                               |
+
 
 Each service has its own **Markdown file** with:
 
