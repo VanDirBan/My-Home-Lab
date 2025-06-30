@@ -67,39 +67,38 @@ my-homelab-docs/
 ```mermaid
 flowchart TD
   %% LAN
-  subgraph LAN [LAN 192.168.8.0/24]
+  subgraph LAN ["LAN: 192.168.8.0/24"]
     direction TB
-    pfSense[🛡️ pfSense<br>192.168.8.1]
-    adg[🧠 AdGuard Home]
-    dns[(🌐 DNS)]
-    proxy[Nginx Proxy Manager<br>🌍 proxy.vanhome.online]
-    proxmox[🖥️ Proxmox VE<br>192.168.8.64]
+    pfSense[pfSense<br>192.168.8.1]
+    adg[AdGuard Home]
+    dns[(DNS)]
+    proxy[Nginx Proxy Manager<br>proxy.vanhome.online]
+    proxmox[Proxmox VE<br>192.168.8.64]
 
     pfSense --> adg --> dns
     pfSense --> proxy
     pfSense --> proxmox
   end
 
-  %% Proxmox Services
-  subgraph ProxmoxNode [Proxmox Node (ThinkCentre M70Q)]
+  %% Proxmox services
+  subgraph ProxmoxNode ["Proxmox Node (M70Q)"]
     direction TB
-    glance[🗂️ Glance Dashboard]
-    disk[(💾 Disk – SMB Share)]
-    media[Jellyfin + Jellyseerr<br>🎬 Media Stack]
-    dl[⬇️ Downloaders<br>qBittorrent + NZBGet]
-    observ[📊 Monitoring<br>Grafana + Prometheus]
-    k3s[(☸️ k3s<br>1 Master + 2 Workers)]
+    glance[Glance Dashboard]
+    disk[(Disk - SMB Share)]
+    media[Jellyfin + Jellyseerr<br>Media Stack]
+    dl[qBittorrent + NZBGet<br>Downloaders]
+    observ[Grafana + Prometheus<br>Monitoring]
+    k3s[(k3s Cluster<br>1 Master + 2 Workers)]
   end
 
-  %% Connections from proxy to services
-  proxy -- HTTPS --> glance
-  proxy -- HTTPS --> media
-  proxy -- HTTPS --> observ
-  proxy -- HTTPS --> disk
-  proxy -- HTTPS --> dl
-
-  %% Proxmox hosting k3s
+  %% Connections
+  proxy -->|HTTPS| glance
+  proxy -->|HTTPS| media
+  proxy -->|HTTPS| observ
+  proxy -->|HTTPS| disk
+  proxy -->|HTTPS| dl
   proxmox --> k3s
+
 ````
 
 ---
