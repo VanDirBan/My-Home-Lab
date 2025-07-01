@@ -41,7 +41,7 @@ Snapshots and vzdump backups save to the internal disks; exported config archive
 
 | Bridge | Uplink / Ports                  | Purpose                   | IP / Notes |
 |--------|---------------------------------|---------------------------|------------|
-| vmbr0  | `eno1` (1 GbE)                  | Main LAN bridge          | 192.168.*.*/24&nbsp;(gateway 192.168.*.1) |
+| vmbr0  | `eno1` (1 GbE)                  | Main LAN bridge          | 192.168.8.66/24&nbsp;(gateway 192.168.8.1) |
 | vmbr1  | `enx6c1ff7197899` (2.5 GbE)     | Main WAN bridge           | External IP adress  |
 | vmbr50 | *none* (software-only bridge)   | **Kubernetes overlay**    | 192.168.50.1/24 + NAT → LAN |
 
