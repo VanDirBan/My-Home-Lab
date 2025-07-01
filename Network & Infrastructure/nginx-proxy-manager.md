@@ -24,7 +24,7 @@ It simplifies certificate issuance/renewal and provides a web UI for adding prox
 | Volumes     | `./npm/data`, `./npm/letsencrypt` |
 | IPv6        | Disabled via `DISABLE_IPV6=true` |
 
-NPM runs in **host** network mode, so it binds directly to the LXC’s IP (`192.168.*.*`) on ports 80 / 443 / 81.
+NPM runs in **host** network mode, so it binds directly to the LXC’s IP (`192.168.8.105`) on ports 80 / 443 / 81.
 
 ---
 
