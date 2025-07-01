@@ -38,7 +38,7 @@ It is running as a Proxmox virtual machine with network bridges connected to bot
 | Interface | Purpose | IP Address     | Notes        |
 |-----------|---------|----------------|--------------|
 | vtnet0    | WAN     | DHCP from ISP  | via bridge   |
-| vtnet1    | LAN     | 192.168.*.1/24 | main LAN     |
+| vtnet1    | LAN     | 192.168.8.1/24 | main LAN     |
 
 All other services route outbound traffic through pfSense.
 
@@ -47,8 +47,8 @@ All other services route outbound traffic through pfSense.
 ## 🔐 Security Features
 
 - Stateful firewall rules
-- Port forwarding to specific services (e.g., HTTPS → Nginx Proxy)
-- DNS resolver with overrides
+- Port forwarding to reverse proxy (e.g., HTTPS → Nginx Proxy Manager)
+- DNS resolver with custom overrides and forwarding to AdGuard Home
 - VLAN support (not yet enabled)
 
 ---
@@ -59,10 +59,4 @@ All other services route outbound traffic through pfSense.
 - XML config exports can be downloaded via Web UI:  
   *Diagnostics > Backup & Restore*
 
----
-
-## 📁 Related Files
-
-This VM is not managed by Docker.  
-No `docker-compose.yml` is used.
 
