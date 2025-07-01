@@ -13,7 +13,7 @@ It provides a drag-and-drop interface to convert between common document, image,
 
 Ideal for occasional conversions without relying on external web services.
 
-Easy setup
+To create a new Proxmox VE ConvertX LXC, run the command below in the Proxmox VE Shell.
 ```
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/convertx.sh)"
 ```
