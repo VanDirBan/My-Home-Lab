@@ -12,6 +12,10 @@ It renders multiple “monitor” widgets that perform HTTP/ICMP checks on inter
 
 The dashboard is defined by a single YAML file (`startpage.yml`), so new services can be added or re-ordered in seconds.
 
+Easy official setup instruction
+```
+https://github.com/glanceapp/glance?tab=readme-ov-file#installation
+```
 ---
 
 ## ⚙️ Specifications
