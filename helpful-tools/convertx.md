@@ -12,7 +12,10 @@
 It provides a drag-and-drop interface to convert between common document, image, audio, and video formats directly in the browser — without cloud uploads.
 
 Ideal for occasional conversions without relying on external web services.
-
+Easy setup
+```
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/convertx.sh)"
+```
 ---
 
 ## ⚙️ Specifications
