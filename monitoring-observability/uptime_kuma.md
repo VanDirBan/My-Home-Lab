@@ -13,6 +13,11 @@ It offers simple uptime charts, historical incident tracking, and notification s
 
 All core services are tracked using public domain entries like `*.vanhome.online`.
 
+To create a new Proxmox VE Uptime Kuma LXC, run the command below in the Proxmox VE Shell.
+```
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/uptimekuma.sh)"
+```
+
 ---
 
 ## ⚙️ Specifications
