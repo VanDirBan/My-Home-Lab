@@ -1,0 +1,23 @@
+#!/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+UPSINFO="$(/sbin/apcaccess status 2>/dev/null || true)"
+BCHARGE=$(echo "$UPSINFO" | awk '/BCHARGE/{print $3}' 2>/dev/null)
+TIMELEFT=$(echo "$UPSINFO" | awk '/TIMELEFT/{print $3}' 2>/dev/null)
+LOADPCT=$(echo "$UPSINFO" | awk '/LOADPCT/{print $3}' 2>/dev/null)
+
+[ -z "$BCHARGE" ] && BCHARGE="NA"
+[ -z "$TIMELEFT" ] && TIMELEFT="NA"
+[ -z "$LOADPCT" ] && LOADPCT="NA"
+
+logger "[apcupsd] Battery low – initiating shutdown. charge=${BCHARGE}%, time=${TIMELEFT}m."
+
+MSG="$(printf '*UPS LOW BATTERY*\nCharge: %s%%\nTime left: %s min\nLoad: %s%%\nHost: %s\n→ Shutting down.' \
+  "$BCHARGE" "$TIMELEFT" "$LOADPCT" "$(hostname)")"
+
+/usr/local/bin/notify.sh "$MSG" &
+
+/sbin/apcupsd --killpower
+
+#  0 → apccontrol - do default shutdown system
+exit 0
