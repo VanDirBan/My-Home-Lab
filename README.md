@@ -49,14 +49,15 @@ my-homelab-docs/
 │   ├── prometheus-alertmanager.md
 │   └── uptime_kuma.md
 └── storage-files/
-    ├── filebrowser.md
-    ├── filebrowser.yml
-    ├── immich.md
-    ├── immich.yml
-    ├── samba.md
-    ├── smb.conf
-    └── timemachine.md
-
+│   ├── filebrowser.md
+│   ├── filebrowser.yml
+│   ├── immich.md
+│   ├── immich.yml
+│   ├── samba.md
+│   ├── smb.conf
+│   └── timemachine.md
+├── power-backup/        # UPS (apcupsd) docs, hooks, JSON API
+└── scripts/             # Host & container automation (hot→cold backups, etc.)
 
 ````
 
