@@ -1,0 +1,13 @@
+[Unit]
+Description=Mini Flask API for APCUPSD
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/opt/apcupsd-api
+ExecStart=/usr/bin/python3 /opt/apcupsd-api/apcupsd_api.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
