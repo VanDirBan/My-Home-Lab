@@ -54,7 +54,8 @@ my-homelab-docs/
     ├── immich.md
     ├── immich.yml
     ├── samba.md
-    └── smb.conf
+    ├── smb.conf
+    └── timemachine.md
 
 
 ````
