@@ -1,0 +1,4 @@
+#!/bin/sh
+logger "[apcupsd] Power restored."
+/usr/local/bin/notify.sh " UPS: Power restored."
+exit 0
