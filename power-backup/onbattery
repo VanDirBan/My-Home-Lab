@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+logger "[apcupsd] Power lost – running on battery."
+/usr/local/bin/notify.sh "*UPS ALERT:* Server running on battery. Possible power outage!"
+exit 0
