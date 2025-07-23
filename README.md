@@ -13,10 +13,11 @@ Lenovo **ThinkCentre M70Q Tiny** (Core i5-10500T · 16 GB RAM · 256 GB NVMe)
 | **Hypervisor** | Proxmox VE 8 (single node) |
 | **LAN** | `192.168.8.0/24` on `vmbr0` (1 GbE) |
 | **Lab Overlay** | `192.168.50.0/24` on `vmbr50` (k3s, NAT) |
-| **Storage** | NVMe system SSD (250 GB) • 1 TB HDD data pool • 2× USB flash for configs |
+| **Storage** | NVMe system SSD (250 GB) • 2 TB HDD data pool (media/data) • USB hub: 1 TB HOT (Immich+TM), 1 TB COLD (rsync snapshots) • 2× USB flash for configs |
 | **Core Services** | pfSense FW • AdGuard Home • Nginx Proxy Mgr • Prometheus + Grafana + Alertmanager • Jellyfin stack • Immich • SMB share |
 | **Helpful Tools** | Glance Startpage • ConvertX • FileBrowser |
 | **Automation** | Docker Compose for apps • Proxmox vzdump + rsync backups |
+| **Power / UPS** | APC Back-UPS BX1200MI + apcupsd (on‑battery/off‑battery hooks, Telegram notify, Flask JSON API) |
 
 ---
 
@@ -64,10 +65,12 @@ my-homelab-docs/
 | --------------- | ------------------------------------- | --------- |
 | Proxmox configs | `vzdump` to USB stick A (daily)       | nightly   |
 | Proxmox configs | `vzdump` to USB stick B (weekly)      | weekly    |
-| LXC / VM disks  | Scheduled vzdump → 1 TB HDD pool      | nightly   |
+| LXC / VM disks  | Scheduled vzdump → 2 TB HDD pool      | nightly   |
 | Media library   | ZFS snapshots + rsync to external HDD | nightly   |
 | Immich DB       | `pg_dump` via cron                    | nightly   |
 | Git repo        | Pushed to GitHub (+private mirror)    | on change |
+| Immich & TimeMachine (hot→cold) | rsync via systemd timer (03:30) → /mnt/cold | nightly |
+| UPS status / battery tests      | apcupsd + exporter + manual test            | monthly |
 
 ---
 
