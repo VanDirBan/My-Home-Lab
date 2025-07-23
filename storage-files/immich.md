@@ -86,3 +86,14 @@ Ensure media and database snapshots are consistent (pause uploads or use WAL-str
 * Redis TTL and worker concurrency default values are kept; tweak via `.env` for heavy loads.
 * After major upgrades run `immich migrate` (happens automatically in latest images).
 
+
+## Storage migration (2025‑07‑22)
+- Old path: `/data/photos/immich` on main HDD (Samba share).
+- New path: `/immich` (mounted from HOT 1 TB disk, UUID=bde757a7-...).
+- Docker Compose updated: volumes → `- /immich:/usr/src/app/upload`
+- Post-move steps:
+  1. `docker compose down`
+  2. `rsync -aAXH --delete /data/photos/immich/ /mnt/hot/immich/`
+  3. Update compose file
+  4. `docker compose up -d`
+  5. Run Immich "Scan storage" if needed.
