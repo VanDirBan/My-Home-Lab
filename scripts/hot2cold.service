@@ -1,0 +1,9 @@
+[Unit]
+Description=Mount cold disk, run container backup, unmount
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/run_backup_hot2cold.sh
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
