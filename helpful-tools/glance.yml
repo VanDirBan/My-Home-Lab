@@ -6,8 +6,6 @@
   columns:
     - size: full
       widgets:
-        - type: search
-          autofocus: true
 
         - type: monitor
           cache: 1m
@@ -18,22 +16,23 @@
             - { title: Xiaomi Router,        url: http://192.168.8.2,                icon: si:xiaomi }
             - { title: Proxmox,              url: http://192.168.8.64:8006,         icon: si:proxmox , allow-insecure: true}
             - { title: Nginx Proxy Manager,  url: https://proxy.vanhome.online,     icon: si:nginx,timeout: 5s, allow-insecure: true }
+            - { title: Disk,  url: https://192.168.8.101:10000,     icon: mdi:harddisk ,timeout: 5s, allow-insecure: true }
 
         - type: monitor
           cache: 1m
-          title: Media – Playback
+          title: Media  Playback
           sites:
             - { title: Jellyfin,    url: https://jellyfin.vanhome.online, icon: si:jellyfin,timeout: 5s, allow-insecure: true }
             - { title: Jellyseerr,  url: https://jellyser.vanhome.online,  icon: mdi:movie-check,timeout: 5s, allow-insecure: true }
-            - { title: Audiobookshelf,  url: https://book.vanhome.online,  icon: mdi:book,timeout: 5s, allow-insecure: true }
+#            - { title: Audiobookshelf,  url: https://book.vanhome.online,  icon: mdi:book,timeout: 5s, allow-insecure: true }
 
         - type: monitor
           cache: 1m
-          title: Monitoring & Observability
+          title: Helpful services
           sites:
-            - { title: Grafana,      url: https://graf.vanhome.online, icon: si:grafana,timeout: 5s, allow-insecure: true }
-            - { title: Prometheus,   url: https://prom.vanhome.online, icon: si:prometheus,timeout: 5s, allow-insecure: true }
-            - { title: Uptime Kuma,  url: https://up.vanhome.online,   icon: si:uptimekuma,timeout: 5s, allow-insecure: true }
+            - { title: ConverteX,      url: https://convert.vanhome.online , icon: mdi:file,timeout: 5s, allow-insecure: true }
+            - { title: Tandoor,  url: https://tandoor.vanhome.online,     icon: mdi:food-apple ,timeout: 5s, allow-insecure: true }
+            - { title: Plant-it,  url: http://192.168.8.167:3000,     icon: mdi:flower-tulip ,timeout: 5s, allow-insecure: true }
 
         - type: monitor
           cache: 1m
@@ -50,26 +49,65 @@
 
         - type: monitor
           cache: 1m
-          title: Media – Downloaders
+          title: Monitoring & Observability
+          sites:
+            - { title: Grafana,      url: https://graf.vanhome.online, icon: si:grafana,timeout: 5s, allow-insecure: true }
+            - { title: Prometheus,   url: https://prom.vanhome.online, icon: si:prometheus,timeout: 5s, allow-insecure: true }
+            - { title: Uptime Kuma,  url: https://up.vanhome.online,   icon: si:uptimekuma,timeout: 5s, allow-insecure: true }
+            - { title: MySpeed,   url: http://192.168.8.104:5216 , icon: mdi:speedometer,timeout: 5s, allow-insecure: true }
+
+        - type: monitor
+          cache: 1m
+          title: Media  Downloaders
           sites:
             - { title: qBittorrent, url: http://192.168.8.102:8080,                 icon: si:qbittorrent }
             - { title: NZBGet,      url: http://van:12341324@192.168.8.102:6789,    icon: mdi:cloud-download }
 
         - type: monitor
           cache: 1m
-          title: Media – Indexers & Managers
+          title: Media  Indexers & Managers
           sites:
             - { title: Prowlarr, url: https://prowlarr.vanhome.online,        icon: mdi:rss,timeout: 5s, allow-insecure: true }
             - { title: Sonarr, url: https://sonarr.vanhome.online, icon: si:sonarr,timeout: 5s, allow-insecure: true}
             - { title: Radarr,   url: https://radarr.vanhome.online,    icon: si:radarr,timeout: 5s, allow-insecure: true }
-            - { title: Lidarr,   url: https://lidarr.vanhome.online,        icon: mdi:music-circle,timeout: 5s, allow-insecure: true }
-            - { title: Readarr,   url: https://readarr.vanhome.online/,        icon: mdi:book,timeout: 5s, allow-insecure: true }
+#            - { title: Lidarr,   url: https://lidarr.vanhome.online,        icon: mdi:music-circle,timeout: 5s, allow-insecure: true }
+#            - { title: Readarr,   url: https://readarr.vanhome.online/,        icon: mdi:book,timeout: 5s, allow-insecure: true }
             - { title: Bazarr,   url: https://bazarr.vanhome.online/,        icon: mdi:subtitles,timeout: 5s, allow-insecure: true }
 
     - size: small
       widgets:
-        - type: calendar
-          first-day-of-week: monday
+        - type: custom-api
+          title: Internet Speed
+          url: http://192.168.8.104:8080/api/myspeed
+          cache: 1m
+          template: |
+            <div class="flex justify-between text-center">
+              <div>
+                <div class="size-h6">DOWNLOAD</div>
+                <div class="color-highlight size-h3">{{ .JSON.Float "download" | printf "%.1f" }} Mbps</div>
+              </div>
+              <div>
+                <div class="size-h6">UPLOAD</div>
+                <div class="color-highlight size-h3">{{ .JSON.Float "upload" | printf "%.1f" }} Mbps</div>
+              </div>
+              <div>
+                <div class="size-h6">PING</div>
+                <div class="color-highlight size-h3">{{ .JSON.Float "ping" | printf "%.0f" }} ms</div>
+              </div>
+            </div>
+
+        - type: custom-api
+          title: UPS
+          cache: 30s
+          url: http://192.168.8.64:8888/ups/status
+          template: |
+            Status: {{ .JSON.String "STATUS" }}<br/>
+            Charge: {{ .JSON.String "BCHARGE" }}<br/>
+            Load: {{ .JSON.String "LOADPCT" }}<br/>
+            Time Left: {{ .JSON.String "TIMELEFT" }}<br/>
+            Line: {{ .JSON.String "LINEV" }}<br/>
+            Batt: {{ .JSON.String "BATTV" }}
+
 
         - type: server-stats
           servers:
@@ -77,12 +115,70 @@
               name: Services
               hide-mountpoints-by-default: true
               mountpoints:
-                "/":
-                  name: Root
-                  hide: false
                 "/mnt/data":
-                  name: Data
+                  name: hdd
                   hide: false
-            - type: remote
-              name: proxmox
-              url: https://192.168.8.64:8006
+
+        - type: custom-api
+          title: AdGuard Stats
+          cache: 1m
+          url: https://log:pass@adg.vanhome.online/control/stats
+          headers:
+            Accept: application/json
+          template: |
+            <style>
+              .stat-box { font-family: sans-serif; background: #2a2a2a; border-radius: 8px; padding: 12px; margin: 5px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+              .stat-label { font-weight: bold; margin-bottom: 4px; }
+              .stat-value { font-size: 1.2em; }
+              .stat-bar { height: 6px; background: #ddd; border-radius: 3px; overflow: hidden; }
+              .stat-bar-fill { height: 6px; background: #4caf50; }
+              .small-note { color: #777; font-size: 0.8em; margin-top: 8px; }
+            </style>
+
+            {{ $total := .JSON.Int "num_dns_queries" }}
+            {{ $blocked := .JSON.Int "num_blocked_filtering" }}
+            {{ $avg := .JSON.Float "avg_processing_time" }}
+
+            {{ $percent := 0}}
+            {{ if gt $total 0 }}
+              {{ $percent = div (mul $blocked 100) $total }}
+            {{ end }}
+
+            <div class="stat-box">
+              <div class="stat-label">Total DNS Queries</div>
+              <div class="stat-value">{{ $total }}</div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-label">Blocked by Filters ({{ $percent }}%)</div>
+              <div class="stat-value">{{ $blocked }}</div>
+              <div class="stat-bar"><div class="stat-bar-fill" style="width:{{ $percent }}%"></div></div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-label">Average Processing Time</div>
+              <div class="stat-value">{{ printf "%.2f" $avg }} ms</div>
+            </div>
+
+
+        - type: custom-api
+          title: Immich stats
+          cache: 1d
+          url: https://immich.vanhome.online/api/server/statistics
+          headers:
+            x-api-key: xxxxxxxxxxxxxxxxxxx
+            Accept: application/json
+          template: |
+            <div class="flex justify-between text-center">
+              <div>
+                <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
+                <div class="size-h6">PHOTOS</div>
+              </div>
+              <div>
+                <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
+                <div class="size-h6">VIDEOS</div>
+              </div>
+              <div>
+                <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                <div class="size-h6">USAGE</div>
+              </div>
