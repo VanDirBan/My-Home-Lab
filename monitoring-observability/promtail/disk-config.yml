@@ -1,0 +1,42 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /var/lib/promtail/positions.yaml
+
+clients:
+  - url: http://192.168.8.149:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: disk-auth
+    static_configs:
+      - targets: ["localhost"]
+        labels:
+          job: auth
+          host: disk
+          __path__: /var/log/auth.log
+
+  - job_name: disk-kernel
+    static_configs:
+      - targets: ["localhost"]
+        labels:
+          job: kernel
+          host: disk
+          __path__: /var/log/kern.log
+
+  - job_name: disk-backup
+    static_configs:
+      - targets: ["localhost"]
+        labels:
+          job: immich-backup
+          host: disk
+          __path__: /var/log/backup_immich.log
+
+  - job_name: disk-samba
+    static_configs:
+      - targets: ["localhost"]
+        labels:
+          job: samba
+          host: disk
+          __path__: /var/log/samba/*.log
