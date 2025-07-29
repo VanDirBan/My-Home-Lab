@@ -43,12 +43,17 @@ my-homelab-docs/
 │   ├── jellyfin-jellyser.md
 │   └── jellyfin-jellyser.yml
 ├── monitoring-observability/
+│   ├── promtail/
+│   │   ├── disk-config.yml
+│   │   ├── prom-graf-config.yml
+│   │   └──  proxmox-config.yml
 │   ├── alert-rules.yml
 │   ├── grafana.md
+│   ├── loki-config.yml
 │   ├── install_node_exporter.sh
 │   ├── prometheus-alertmanager.md
 │   └── uptime_kuma.md
-└── storage-files/
+├── storage-files/
 │   ├── filebrowser.md
 │   ├── filebrowser.yml
 │   ├── immich.md
