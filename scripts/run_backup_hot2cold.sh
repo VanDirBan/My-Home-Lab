@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
 LOG=/var/log/run_backup_hot2cold.log
 CTID=101
 MOUNT=/mnt/cold
+NOTIFIER=/usr/local/bin/notify.sh
 
+on_error() {
+  local MSG="HOT→COLD BACKUP ERROR on $(hostname) at $(date '+%F %T')"
+  echo "ERROR: $MSG" >> "$LOG"
+  $NOTIFIER "$MSG" &
+}
+trap on_error ERR
 {
   echo "==== $(date '+%F %T') HOST: start hot→cold sync ===="
 
