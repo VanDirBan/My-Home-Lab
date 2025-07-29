@@ -1,0 +1,48 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /var/lib/promtail/positions.yaml
+
+clients:
+  - url: http://192.168.8.149:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: journal-important
+    journal:
+      max_age: 12h
+      labels:
+        job: journal
+        host: proxmox
+    relabel_configs:
+      - source_labels: ['__journal__systemd_unit']
+        regex: '(sshd|nginx|docker|fail2ban|systemd).*'
+        target_label: 'unit'
+
+  - job_name: backups
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: custom-backup
+          host: proxmox
+          __path__: /var/log/run_backup_hot2cold.log
+
+  - job_name: pve-firewall
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: pve-fw
+          host: proxmox
+          __path__: /var/log/pve-firewall.log
+
+  - job_name: apcupsd
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: apcupsd
+          host: proxmox
+          __path__: /var/log/apcupsd.events
