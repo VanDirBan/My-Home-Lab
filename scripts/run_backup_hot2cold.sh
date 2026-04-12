@@ -19,6 +19,15 @@ NOTIFIER=/usr/local/bin/notify.sh
 declare -a STOPPED_CTS=()
 declare -a STOPPED_VMS=()
 
+# -----------------------------------------------------------------------------
+# Manually listed guests to stop before backup and restart after.
+# Use this for guests that don't live in /mnt/hot/images/ but depend on it
+# (e.g. containers that mount volumes from the hot pool).
+# Format: just the numeric VMID. CTs and VMs are auto-detected via pct/qm.
+# Example: MANUAL_GUEST_IDS=(108 205 310)
+# -----------------------------------------------------------------------------
+MANUAL_GUEST_IDS=(108)
+
 # Redirect all output (including code outside the main block) to the log
 exec >> "$LOG" 2>&1
 
@@ -93,6 +102,48 @@ start_guests_back() {
 clear_stopped_lists() {
   STOPPED_CTS=()
   STOPPED_VMS=()
+}
+
+# -----------------------------------------------------------------------------
+# Stop a single guest (CT or VM) and add to the appropriate list.
+# Skips guests that are already stopped.
+# -----------------------------------------------------------------------------
+stop_guest() {
+  local id=$1
+
+  if pct config "$id" >/dev/null 2>&1; then
+    if pct status "$id" | grep -q running; then
+      log "HOST: shutting down CT $id (graceful, timeout 180s)"
+      if pct shutdown "$id" --timeout 180; then
+        log "HOST: CT $id shut down gracefully"
+      else
+        log "HOST: graceful shutdown failed for CT $id, forcing stop"
+        pct stop "$id"
+        wait_ct_stopped "$id" 30
+      fi
+      STOPPED_CTS+=("$id")
+    else
+      log "HOST: CT $id already stopped"
+    fi
+
+  elif qm config "$id" >/dev/null 2>&1; then
+    if qm status "$id" | grep -q running; then
+      log "HOST: shutting down VM $id (graceful, timeout 180s)"
+      if qm shutdown "$id" --timeout 180; then
+        log "HOST: VM $id shut down gracefully"
+      else
+        log "HOST: graceful shutdown failed for VM $id, forcing stop"
+        qm stop "$id"
+        wait_vm_stopped "$id" 30
+      fi
+      STOPPED_VMS+=("$id")
+    else
+      log "HOST: VM $id already stopped"
+    fi
+
+  else
+    log "HOST [ERROR]: manual guest ID $id — no matching CT/VM config found, skipping"
+  fi
 }
 
 # -----------------------------------------------------------------------------
@@ -184,8 +235,17 @@ mkdir -p "$DST_CONFIG/lxc"
 mkdir -p "$DST_CONFIG/qemu"
 
 # --------------------------------------------------------------------------
+# 4a. Stop manually listed guests (before auto-detected ones)
+# --------------------------------------------------------------------------
+if (( ${#MANUAL_GUEST_IDS[@]} > 0 )); then
+  log "HOST: stopping manually listed guests: ${MANUAL_GUEST_IDS[*]}"
+  for id in "${MANUAL_GUEST_IDS[@]}"; do
+    stop_guest "$id"
+  done
+fi
+
+# --------------------------------------------------------------------------
 # 5 & 6. Iterate guests in /mnt/hot/images: save configs and stop running ones
-# Single pass instead of two separate loops over the same directory.
 # --------------------------------------------------------------------------
 if [[ ! -d "$SRC_BASE/images" ]]; then
   log "HOST: WARNING — $SRC_BASE/images not found, no guests to process"
@@ -197,6 +257,12 @@ else
 
     id=$(basename "$guest_path")
     [[ "$id" =~ ^[0-9]+$ ]] || continue
+
+    # Skip IDs already handled via MANUAL_GUEST_IDS
+    if printf '%s\n' "${MANUAL_GUEST_IDS[@]+"${MANUAL_GUEST_IDS[@]}"}" | grep -qx "$id"; then
+      log "HOST: skipping $id (already handled as manual guest)"
+      continue
+    fi
 
     # -- Config backup and shutdown: LXC container --
     if pct config "$id" >/dev/null 2>&1; then
